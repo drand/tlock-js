@@ -3,18 +3,16 @@
     "module": "commonjs",
     "target": "esnext",
     "sourceMap": true,
-    "jsx": "preserve",
-    "outDir": "./build/",
+    "outDir": "./dist/",
     "moduleResolution": "node",
+    "declaration": true,
     "allowJs": true,
     "esModuleInterop": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "lib": [
       "dom",
-      "esnext",
-      "dom.iterable",
-      "scripthost"
+      "esnext"
     ],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
