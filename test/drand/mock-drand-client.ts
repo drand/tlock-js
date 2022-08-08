@@ -1,4 +1,5 @@
 import {Beacon, DrandClient} from "../../src/drand/drand-client"
+import {defaultClientInfo} from "../../src"
 
 class MockDrandClient implements DrandClient {
 
@@ -7,6 +8,10 @@ class MockDrandClient implements DrandClient {
 
     get(_: number): Promise<Beacon> {
         return Promise.resolve(this.beacon)
+    }
+
+    async info() {
+        return defaultClientInfo
     }
 }
 

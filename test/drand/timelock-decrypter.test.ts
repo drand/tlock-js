@@ -1,6 +1,6 @@
 import {expect} from "chai"
 import {MockDrandClient} from "./mock-drand-client"
-import {defaultClientInfo} from "../../src/drand/drand-client"
+import {defaultClientInfo} from "../../src"
 import {readAge} from "../../src/age/age-reader-writer"
 import {decodeArmor} from "../../src/age/armor"
 import {createTimelockDecrypter} from "../../src/drand/timelock-decrypter"
@@ -18,7 +18,7 @@ describe("timelock decrypter", () => {
 
     it("should decrypt for stanzas created using tlock", async () => {
         const plaintext = "hello world"
-        const ciphertext = await timelockEncrypt(defaultClientInfo, 1, plaintext, mockClient)
+        const ciphertext = await timelockEncrypt(1, plaintext, mockClient)
         const parsedAgeEncryption = readAge(decodeArmor(ciphertext))
 
         const decryptedFileKey = await createTimelockDecrypter(mockClient)(parsedAgeEncryption.header.recipients)

@@ -2,6 +2,7 @@ import * as bls from "@noble/bls12-381"
 
 export interface DrandClient {
     get(round: number): Promise<Beacon>
+    info(): Promise<DrandNetworkInfo>
 }
 
 export type Beacon = {
@@ -86,7 +87,11 @@ class DrandHttpClient implements DrandClient {
         }
     }
 
-    static createFetchClient(options: DrandNetworkInfo = defaultClientInfo): DrandHttpClient {
+    async info() {
+        return this.options
+    }
+
+    static createFetchClient(options: DrandNetworkInfo): DrandHttpClient {
         const fetchSuccess = async (url: string) => {
             const response = await fetch(url)
             if (response.status === 404) {

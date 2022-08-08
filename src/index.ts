@@ -1,24 +1,23 @@
-import {defaultClientInfo, DrandClient, DrandHttpClient, DrandNetworkInfo, roundForTime, timeForRound} from "./drand/drand-client"
+import {defaultClientInfo, DrandClient, DrandHttpClient, roundForTime, timeForRound} from "./drand/drand-client"
 import {createTimelockEncrypter} from "./drand/timelock-encrypter"
 import {decryptAge, encryptAge} from "./age/age-encrypt-decrypt"
 import {decodeArmor, encodeArmor, isProbablyArmored} from "./age/armor"
 import {createTimelockDecrypter} from "./drand/timelock-decrypter"
 
 export async function timelockEncrypt(
-    config: DrandNetworkInfo,
     roundNumber: number,
     payload: string,
-    drandHttpClient: DrandClient = DrandHttpClient.createFetchClient(),
+    drandHttpClient: DrandClient = DrandHttpClient.createFetchClient(defaultClientInfo),
 ): Promise<string> {
-    // probably should get `chainInfo` through /info
-    const timelockEncrypter = createTimelockEncrypter(defaultClientInfo, drandHttpClient, roundNumber)
+    const chainInfo = await drandHttpClient.info()
+    const timelockEncrypter = createTimelockEncrypter(chainInfo, drandHttpClient, roundNumber)
     const agePayload = await encryptAge(Buffer.from(payload), timelockEncrypter)
     return encodeArmor(agePayload)
 }
 
 export async function timelockDecrypt(
     ciphertext: string,
-    drandHttpClient: DrandClient = DrandHttpClient.createFetchClient()
+    drandHttpClient: DrandClient = DrandHttpClient.createFetchClient(defaultClientInfo)
 ): Promise<string> {
     const timelockDecrypter = createTimelockDecrypter(drandHttpClient)
 

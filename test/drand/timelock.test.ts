@@ -1,5 +1,4 @@
 import {expect} from "chai"
-import {defaultClientInfo} from "../../src/drand/drand-client"
 import {assertError} from "../utils"
 import {MockDrandClient} from "./mock-drand-client"
 import {timelockDecrypt, timelockEncrypt} from "../../src"
@@ -7,10 +6,10 @@ import {timelockDecrypt, timelockEncrypt} from "../../src"
 describe("timelock", () => {
     describe("encryption", () => {
         it("should fail for roundNumber less than 0", async () => {
-            await assertError(() => timelockEncrypt(defaultClientInfo, -1, "hello world"))
+            await assertError(() => timelockEncrypt(-1, "hello world"))
         })
         it("should pass for a valid roundNumber", async () => {
-            expect(await timelockEncrypt(defaultClientInfo, 1, "hello world")).to.have.length.greaterThan(0)
+            expect(await timelockEncrypt(1, "hello world")).to.have.length.greaterThan(0)
         })
     })
 
@@ -23,7 +22,7 @@ describe("timelock", () => {
         const mockClient = new MockDrandClient(validBeacon)
         it("should succeed for a correctly timelock encrypted payload", async () => {
             const plaintext = "hello world"
-            const decryptedPayload = await timelockDecrypt(await timelockEncrypt(defaultClientInfo, 1, plaintext, mockClient), mockClient)
+            const decryptedPayload = await timelockDecrypt(await timelockEncrypt(1, plaintext, mockClient), mockClient)
 
             expect(decryptedPayload).to.equal(plaintext)
         })
