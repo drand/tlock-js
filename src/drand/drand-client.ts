@@ -19,6 +19,7 @@ export const defaultClientInfo: DrandNetworkInfo = {
     period: 3,
     schemeID: "pedersen-bls-unchained"
 }
+
 export type DrandNetworkInfo = {
     chainUrl: string
     chainHash: string
@@ -38,6 +39,17 @@ export function roundForTime(time: number, info: DrandNetworkInfo): number {
 
     const timeUntilRound = time - genesisTimeMs
     return Math.ceil(timeUntilRound / periodMs)
+}
+
+export function timeForRound(round: number, info: DrandNetworkInfo): number {
+    const genesisTimeMs = info.genesisTime * 1000
+    const periodMs = info.period * 1000
+
+    if (round < 0) {
+        throw Error("You can't request a round before the genesis!")
+    }
+
+    return genesisTimeMs + (round * periodMs)
 }
 
 export type DrandHttpClientOptions = {

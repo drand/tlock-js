@@ -1,4 +1,4 @@
-import {defaultClientInfo, DrandClient, DrandHttpClient, DrandNetworkInfo} from "./drand/drand-client"
+import {defaultClientInfo, DrandClient, DrandHttpClient, DrandNetworkInfo, roundForTime, timeForRound} from "./drand/drand-client"
 import {createTimelockEncrypter} from "./drand/timelock-encrypter"
 import {decryptAge, encryptAge} from "./age/age-encrypt-decrypt"
 import {decodeArmor, encodeArmor, isProbablyArmored} from "./age/armor"
@@ -30,4 +30,4 @@ export async function timelockDecrypt(
     return await decryptAge(cipher, timelockDecrypter)
 }
 
-export {DrandHttpClient, defaultClientInfo}
+export {DrandHttpClient, defaultClientInfo, roundForTime, timeForRound}

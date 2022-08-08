@@ -1,6 +1,6 @@
 import * as chai from "chai"
 import {expect} from "chai"
-import {defaultClientInfo, DrandHttpClient, parseBeacon, roundForTime} from "../../src/drand/drand-client"
+import {defaultClientInfo, DrandHttpClient, parseBeacon, roundForTime, timeForRound} from "../../src/drand/drand-client"
 import {assertError, assertErrorMessage} from "../utils"
 
 
@@ -81,19 +81,45 @@ describe("drand-client", () => {
     })
 
     describe("round time", () => {
-        it("should get round 1 when time is less than genesis", () => {
-            const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 1}
-            expect(roundForTime(1, networkInfo)).to.equal(1)
-        })
+        describe("roundForTime", () => {
 
-        it("should get round 1 for first round", () => {
-            const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 1}
-            expect(roundForTime(1, networkInfo)).to.equal(1)
-        })
+            it("should get round 1 when time is less than genesis", () => {
+                const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 1}
+                expect(roundForTime(1, networkInfo)).to.equal(1)
+            })
 
-        it("should get round 2 for second round", () => {
-            const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 1}
-            expect(roundForTime(1001, networkInfo)).to.equal(2)
+            it("should get round 1 for first round", () => {
+                const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 1}
+                expect(roundForTime(1, networkInfo)).to.equal(1)
+            })
+
+            it("should get round 2 for second round", () => {
+                const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 1}
+                expect(roundForTime(1001, networkInfo)).to.equal(2)
+            })
+        })
+        describe("timeForRound", () => {
+            it("should fail for rounds before genesis", () => {
+                expect(() => timeForRound(-1, defaultClientInfo)).throws()
+            })
+            it("should convert to ms correctly", () => {
+                const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 1}
+
+                expect(timeForRound(1, networkInfo)).to.equal(1000)
+            })
+            it("should calculate future rounds correctly", () => {
+                const networkInfo = {...defaultClientInfo, genesisTime: 0, period: 2}
+
+                expect(timeForRound(5, networkInfo)).to.equal(10000)
+            })
+
+            it("should calculate based on genesis time correctly", () => {
+                const genesisTimeMs = Date.now()
+
+                const networkInfo = {...defaultClientInfo, genesisTime: genesisTimeMs / 1000, period: 2}
+
+                expect(timeForRound(5, networkInfo)).to.equal(genesisTimeMs + 10000)
+            })
         })
     })
 
@@ -116,23 +142,27 @@ describe("drand-client", () => {
         })
 
         it("should fail if round number is not a number", () => {
-            expect(() => parseBeacon({ round: "10", signature: "deadbeefdeadbeef", randomness: "cafebabecafebabe"})).throws()
+            expect(() => parseBeacon({
+                round: "10",
+                signature: "deadbeefdeadbeef",
+                randomness: "cafebabecafebabe"
+            })).throws()
         })
 
         it("should fail if the randomness is not a string", () => {
-            expect(() => parseBeacon({ round: 10, signature: "deadbeefdeadbeef", randomness: 1010101010 })).throws()
+            expect(() => parseBeacon({round: 10, signature: "deadbeefdeadbeef", randomness: 1010101010})).throws()
         })
 
         it("should fail if the randomness is missing", () => {
-            expect(() => parseBeacon({ round: 10, signature: "deadbeefdeadbeef" })).throws()
+            expect(() => parseBeacon({round: 10, signature: "deadbeefdeadbeef"})).throws()
         })
 
         it("should fail if the signature is not a string", () => {
-            expect(() => parseBeacon({ round: 10, signature: [], randomness: "cafebabecafebabe" })).throws()
+            expect(() => parseBeacon({round: 10, signature: [], randomness: "cafebabecafebabe"})).throws()
         })
 
         it("should fail if the signature is missing", () => {
-            expect(() => parseBeacon({ round: 10, randomness: 1010101010 })).throws()
+            expect(() => parseBeacon({round: 10, randomness: 1010101010})).throws()
         })
     })
 })
