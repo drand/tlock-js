@@ -1,6 +1,6 @@
 {
   "name": "tlock-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library to encrypt data that can only be decrypted in the future using drand",
   "source": "src/index.ts",
   "main": "dist/index.js",
@@ -28,7 +28,6 @@
     "@types/yup": "^0.29.14",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
-    "buffer": "^6.0.3",
     "chai": "^4.3.6",
     "chai-string": "^1.5.0",
     "eslint": "^8.19.0",
@@ -40,7 +39,8 @@
   "dependencies": {
     "@noble/bls12-381": "^1.3.0",
     "@noble/hashes": "^1.1.2",
-    "@stablelib/chacha20poly1305": "^1.0.1"
+    "@stablelib/chacha20poly1305": "^1.0.1",
+    "buffer": "^6.0.3"
   },
   "browserslist": [
     "> 0.5%",
