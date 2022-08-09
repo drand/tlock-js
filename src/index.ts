@@ -6,12 +6,12 @@ import {createTimelockDecrypter} from "./drand/timelock-decrypter"
 
 export async function timelockEncrypt(
     roundNumber: number,
-    payload: string,
+    payload: Buffer,
     drandHttpClient: DrandClient = DrandHttpClient.createFetchClient(defaultClientInfo),
 ): Promise<string> {
     const chainInfo = await drandHttpClient.info()
     const timelockEncrypter = createTimelockEncrypter(chainInfo, drandHttpClient, roundNumber)
-    const agePayload = await encryptAge(Buffer.from(payload), timelockEncrypter)
+    const agePayload = await encryptAge(payload, timelockEncrypter)
     return encodeArmor(agePayload)
 }
 

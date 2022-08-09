@@ -107,14 +107,12 @@ class DrandHttpClient implements DrandClient {
 }
 
 export function parseBeacon(json: unknown): Beacon {
-    const hasProperty = <Obj, Prop extends string>(obj: Obj, prop: Prop)
-        : obj is Obj & Record<Prop, unknown> =>
+    const hasProperty = <Obj, Prop extends string>(obj: Obj, prop: Prop): obj is Obj & Record<Prop, unknown> =>
         Object.prototype.hasOwnProperty.call(obj, prop)
 
     if (typeof json !== "object" || !json) {
         throw Error("Expected JSON body to be an object!")
     }
-
     if (!hasProperty(json, "round") || typeof json.round !== "number") {
         throw Error("Beacon property `round` missing or incorrect!")
     }
