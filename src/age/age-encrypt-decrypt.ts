@@ -79,5 +79,5 @@ export async function decryptAge(
     const hkdfKey = hkdf(sha256, fileKey, nonce, Buffer.from(hkdfBodyMessage, "utf8"), hkdfKeyLengthBytes)
 
     const plaintext = STREAM.open(cipherText, hkdfKey)
-    return Buffer.from(plaintext).toString("utf8")
+    return Buffer.from(plaintext).toString("binary")
 }
