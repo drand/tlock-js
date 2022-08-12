@@ -95,7 +95,8 @@ class DrandHttpClient implements DrandClient {
         const fetchSuccess = async (url: string) => {
             const response = await fetch(url)
             if (response.status === 404) {
-                throw new Error(`It's too early to decrypt!`)
+                const roundNumber = url.split("/").pop()
+                throw new Error(`It's too early to decrypt! Can only be decrypted after round ${roundNumber}`)
             }
             if (!response.ok) {
                 throw new Error(`Error reaching drand: ${response.status}`)
