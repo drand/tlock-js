@@ -7,19 +7,33 @@ import {createTimelockDecrypter} from "./drand/timelock-decrypter"
 export async function timelockEncrypt(
     roundNumber: number,
     payload: Buffer,
-    drandHttpClient: DrandClient = DrandHttpClient.createFetchClient(defaultClientInfo),
+    options?: {
+        drandHttpClient?: DrandClient,
+        doNotIncludeRoundNumber?: boolean
+    }
 ): Promise<string> {
+    let drandHttpClient = options?.drandHttpClient;
+    if (!drandHttpClient) {
+        drandHttpClient =  DrandHttpClient.createFetchClient(defaultClientInfo)
+    }
     const chainInfo = await drandHttpClient.info()
-    const timelockEncrypter = createTimelockEncrypter(chainInfo, drandHttpClient, roundNumber)
+    const timelockEncrypter = createTimelockEncrypter(chainInfo, drandHttpClient, roundNumber, {doNotIncludeRoundNumber: options?.doNotIncludeRoundNumber})
     const agePayload = await encryptAge(payload, timelockEncrypter)
     return encodeArmor(agePayload)
 }
 
 export async function timelockDecrypt(
-    ciphertext: string,
+    ciphertext: string | {ciphertext: string; roundNumber?: number},
     drandHttpClient: DrandClient = DrandHttpClient.createFetchClient(defaultClientInfo)
 ): Promise<string> {
-    const timelockDecrypter = createTimelockDecrypter(drandHttpClient)
+
+    let roundNumber;
+    if (typeof ciphertext !== "string") {
+        roundNumber = ciphertext.roundNumber
+        ciphertext = ciphertext.ciphertext
+    }
+
+    const timelockDecrypter = createTimelockDecrypter(drandHttpClient, roundNumber)
 
     let cipher = ciphertext
     if (isProbablyArmored(ciphertext)) {

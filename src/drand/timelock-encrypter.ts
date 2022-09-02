@@ -5,7 +5,7 @@ import {DrandClient, DrandNetworkInfo} from "./drand-client"
 import {Stanza} from "../age/age-encrypt-decrypt"
 import {Ciphertext} from "../crypto/ibe"
 
-export function createTimelockEncrypter(chainInfo: DrandNetworkInfo, network: DrandClient, roundNumber: number) {
+export function createTimelockEncrypter(chainInfo: DrandNetworkInfo, network: DrandClient, roundNumber: number, options?: {doNotIncludeRoundNumber?: boolean}) {
     if (roundNumber < 1) {
         throw Error("You cannot encrypt for a roundNumber less than 1 (genesis = 0)")
     }
@@ -17,7 +17,7 @@ export function createTimelockEncrypter(chainInfo: DrandNetworkInfo, network: Dr
 
         return [{
             type: "tlock",
-            args: [`${roundNumber}`, chainInfo.chainHash],
+            args: options?.doNotIncludeRoundNumber ? [chainInfo.chainHash] : [`${roundNumber}`, chainInfo.chainHash],
             body: serialisedCiphertext(ciphertext)
         }]
     }
