@@ -75,5 +75,13 @@ describe("age", () => {
             const result = await decryptAge(ciphertext)
             expect(result).to.equal(bigPayload)
         })
+
+        it("should correctly encrypt and decrypt special characters", async () => {
+            const someFrench = "ça a marché"
+            const ciphertext = await encryptAge(Buffer.from(someFrench))
+            const result = await decryptAge(ciphertext)
+
+            expect(result).to.equal(someFrench)
+        })
     })
 })
