@@ -1,3 +1,4 @@
+import { Buffer } from "buffer"
 import {defaultClientInfo, DrandClient, DrandHttpClient, roundForTime, timeForRound} from "./drand/drand-client"
 import {createTimelockEncrypter} from "./drand/timelock-encrypter"
 import {decryptAge, encryptAge} from "./age/age-encrypt-decrypt"
@@ -29,4 +30,4 @@ export async function timelockDecrypt(
     return await decryptAge(cipher, timelockDecrypter)
 }
 
-export {DrandHttpClient, defaultClientInfo, roundForTime, timeForRound}
+export {DrandHttpClient, defaultClientInfo, roundForTime, timeForRound, Buffer}

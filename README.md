@@ -5,11 +5,14 @@ tlock-js uses [AGE](https://age-encryption.org/v1) to symmetrically encrypt a pa
 
 ## Prerequisites
 - Node 16+
+- a browser that supports bigint (which is most of them - [see here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) )
  
 ## Quickstart
 - install the dependencies by running `npm install`
 - run the tests with `npm test`
+- run the linter and fix the problems by running `npm run lint:fix`
 
+## API
 ### `timelockEncrypt` 
 This encrypts a payload that can only be decrypted when the `roundNumber` has been reached.  
 The time of this `roundNumber` depends on the genesis and round frequency of the network you connect to.
@@ -29,7 +32,15 @@ Given a `NetworkInfo` object, it calculates the approximate time the given `roun
 
 ## Possible issues
 - you may need a `fetch` polyfill on some versions of node, e.g. [isomorphic fetch](https://www.npmjs.com/package/isomorphic-fetch).  You can provide your own `DrandHttpClientOptions` to the `DrandHttpClient` if you don't want to use fetch, but it may be necessary to declare a fake `fetch` somewhere for compilation
-
+- vite users may need to set their build target to "es2020" with a config such as:
+ ```javascript
+export default {
+    build: { target: "es2020" },
+    optimizeDeps: {
+        esbuildOptions: { target: "es2020", supported: { bigint: true } },
+    },
+};
+```
 
 ### License
 
