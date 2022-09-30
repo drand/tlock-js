@@ -4,24 +4,40 @@ import {PointG1, PointG2} from "@noble/bls12-381"
 import * as ibe from "../crypto/ibe"
 import {Ciphertext} from "../crypto/ibe"
 
-export function createTimelockDecrypter(network: DrandClient) {
-    return async (recipients: Array<Stanza>): Promise<Uint8Array> => {
+export function createTimelockDecrypter(network: DrandClient, roundNumberForAll?: number) {
+    return async (recipients: Array<Stanza>, roundNumber?: number): Promise<Uint8Array> => {
         if (recipients.length !== 1) {
             throw Error("Timelock only expects a single stanza!")
         }
 
-        const {type, args, body} = recipients[0]
+        const { type, args, body } = recipients[0]
+
+        roundNumber = roundNumber || roundNumberForAll
 
         if (type !== "tlock") {
             throw Error(`Timelock expects the type of the stanza to be "tlock`)
         }
 
-        if (args.length !== 2) {
-            throw Error(`Timelock stanza expected 2 args: roundNumber and chainHash. Only received ${args.length}`)
+        let chainHash: string
+        if (args.length === 1) {
+            if (roundNumber === undefined) {
+                throw Error(
+                    `Timelock stanza was provided with only one argument (chainHash), but no roundNumber was specified`
+                )
+            }
+            chainHash = args[0];
+        } else if (args.length === 2) {
+            roundNumber = parseRoundNumber(args)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            chainHash = args[1];
+        } else {
+            throw Error(
+                `Timelock stanza expected 1 (chainHash) or 2 args (roundNumber and chainHash). Only received ${args.length}`
+            )
         }
 
         // should probably verify chain hash here too
-        const beacon = await network.get(parseRoundNumber(args))
+        const beacon = await network.get(roundNumber)
         console.log(`beacon received: ${JSON.stringify(beacon)}`)
 
         const g2 = PointG2.fromHex(beacon.signature)
