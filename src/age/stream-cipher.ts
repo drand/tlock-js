@@ -12,6 +12,10 @@ const TAG_SIZE = 16 // Poly1305 MAC size
 const ENCRYPTED_CHUNK_SIZE = CHUNK_SIZE + TAG_SIZE
 const NONCE_SIZE = 12 // STREAM nonce size
 
+// due to using a 32bit uint for the counter, this is the max
+// value the counter can be without risking a nonce reuse
+const COUNTER_MAX = Math.pow(2, 32)
+
 type ui8a = Uint8Array
 
 export class STREAM {
@@ -85,6 +89,10 @@ export class STREAM {
     // Increments Big Endian Uint8Array-based counter.
     // [0, 0, 0] => [0, 0, 1] ... => [0, 0, 255] => [0, 1, 0]
     incrementCounter() {
+        if (this.counter == COUNTER_MAX) {
+            throw new Error("Stream cipher counter has already hit max value! Aborting to avoid nonce reuse - tlock only supports payloads up to 256TB")
+        }
+
         this.counter += 1
         this.nonceView.setUint32(7, this.counter, false)
     }
