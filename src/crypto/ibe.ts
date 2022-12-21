@@ -2,6 +2,7 @@ import * as bls from "@noble/bls12-381"
 import {PointG1, PointG2, utils} from "@noble/bls12-381"
 import {sha256} from "@noble/hashes/sha256"
 import {bytesToNumberBE, fp12ToBytes, xor} from "./utils"
+import {hashToCurve} from "./hash-to-curve"
 
 export interface Ciphertext {
     U: PointG1
@@ -16,7 +17,8 @@ export async function encrypt(master: PointG1, ID: Uint8Array, msg: Uint8Array):
     }
 
     // 1. Compute Gid = e(master,Q_id)
-    const Qid = await bls.PointG2.hashToCurve(ID)
+    const Qid = await hashToCurve(ID)
+    // const Qid = await bls.PointG2.hashToCurve(ID)
     const Gid = bls.pairing(master, Qid)
 
     // 2. Derive random sigma
