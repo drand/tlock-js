@@ -20,7 +20,8 @@
     "isolatedModules": false,
     "types": [
       "node",
-      "mocha"
+      "mocha",
+      "./src/types/js-chacha20"
     ]
   },
   "include": [

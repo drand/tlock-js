@@ -28,7 +28,6 @@
     "@parcel/transformer-typescript-types": "^2.7.0",
     "@types/chai": "^4.3.1",
     "@types/chai-string": "^1.4.2",
-    "@types/js-chacha20": "./src/types/js-chacha20",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.0.4",
     "@types/yup": "^0.29.14",
