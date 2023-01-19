@@ -1,4 +1,3 @@
-import {test} from "mocha"
 import {expect} from "chai"
 import {MockDrandClient} from "../drand/mock-drand-client"
 import {timelockDecrypt} from "../../src"

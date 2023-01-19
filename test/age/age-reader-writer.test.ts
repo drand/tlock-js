@@ -3,22 +3,29 @@ import {readAge, writeAge} from "../../src/age/age-reader-writer"
 import {random} from "../../src/age/utils-crypto"
 
 describe("AGE", () => {
-    describe("writer", async () => {
+    describe("writer", () => {
         const helloWorld = new Uint8Array(Buffer.from("hello world"))
-        const params = {
-            fileKey: await random(32),
-            version: "my-encrypter/1",
-            recipients: [],
-            headerMacMessage: "banana",
-            body: helloWorld
-        }
 
-        it("should have newlines for the version and mac", () => {
+        it("should have newlines for the version and mac", async () => {
+            const params = {
+                fileKey: await random(32),
+                version: "my-encrypter/1",
+                recipients: [],
+                headerMacMessage: "banana",
+                body: helloWorld
+            }
             const encryptedPayload = writeAge(params)
             expect(Array.from(encryptedPayload.matchAll(/\n/g))).to.have.length(2)
         })
 
-        it("should have an additional line for each recipient", () => {
+        it("should have an additional line for each recipient", async () => {
+            const params = {
+                fileKey: await random(32),
+                version: "my-encrypter/1",
+                recipients: [],
+                headerMacMessage: "banana",
+                body: helloWorld
+            }
             const recipients = [{
                 type: "tlock",
                 args: ["0", "abc"],
