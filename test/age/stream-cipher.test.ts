@@ -1,4 +1,3 @@
-import {test} from "mocha"
 import {expect} from "chai"
 import {STREAM} from "../../src/age/stream-cipher"
 
