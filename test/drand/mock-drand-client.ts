@@ -1,18 +1,40 @@
-import {Beacon, DrandClient} from "../../src/drand/drand-client"
-import {defaultClientInfo} from "../../src"
+import {
+    Chain,
+    ChainClient,
+    ChainInfo, ChainOptions,
+    RandomnessBeacon
+} from "drand-client"
+import {defaultChainInfo, defaultChainUrl} from "../../src"
 
-class MockDrandClient implements DrandClient {
-
-    constructor(private beacon: Beacon) {
+class MockDrandClient implements ChainClient {
+    options: ChainOptions = {
+        disableBeaconVerification: false,
+        noCache: false,
     }
 
-    get(_: number): Promise<Beacon> {
+    constructor(private beacon: RandomnessBeacon) {
+    }
+
+    get(_: number): Promise<RandomnessBeacon> {
         return Promise.resolve(this.beacon)
     }
 
-    async info() {
-        return defaultClientInfo
+    latest(): Promise<RandomnessBeacon> {
+        return Promise.resolve(this.beacon)
     }
+
+    chain(): Chain {
+        return new Mockchain()
+    }
+}
+
+class Mockchain implements Chain {
+    baseUrl = defaultChainUrl
+
+    info(): Promise<ChainInfo> {
+        return Promise.resolve(defaultChainInfo)
+    }
+
 }
 
 const validBeacon = {
@@ -21,4 +43,4 @@ const validBeacon = {
     signature: "86ecea71376e78abd19aaf0ad52f462a6483626563b1023bd04815a7b953da888c74f5bf6ee672a5688603ab310026230522898f33f23a7de363c66f90ffd49ec77ebf7f6c1478a9ecd6e714b4d532ab43d044da0a16fed13b4791d7fc999e2b"
 }
 
-export { MockDrandClient, validBeacon }
+export {MockDrandClient, validBeacon}

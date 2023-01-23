@@ -1,8 +1,8 @@
 import * as chai from "chai"
 import {expect} from "chai"
-import chaiString from "chai-string"
 import {decryptAge, encryptAge} from "../../src/age/age-encrypt-decrypt"
 import {assertError, assertErrorMessage} from "../utils"
+import chaiString = require("chai-string")
 
 chai.use(chaiString)
 

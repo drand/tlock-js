@@ -1,10 +1,10 @@
-import {DrandClient} from "./drand-client"
 import {Stanza} from "../age/age-encrypt-decrypt"
 import {PointG1, PointG2} from "@noble/bls12-381"
+import {ChainClient, fetchBeacon} from "drand-client"
 import * as ibe from "../crypto/ibe"
 import {Ciphertext} from "../crypto/ibe"
 
-export function createTimelockDecrypter(network: DrandClient) {
+export function createTimelockDecrypter(network: ChainClient) {
     return async (recipients: Array<Stanza>): Promise<Uint8Array> => {
         if (recipients.length !== 1) {
             throw Error("Timelock only expects a single stanza!")
@@ -21,7 +21,7 @@ export function createTimelockDecrypter(network: DrandClient) {
         }
 
         // should probably verify chain hash here too
-        const beacon = await network.get(parseRoundNumber(args))
+        const beacon = await fetchBeacon(network, parseRoundNumber(args))
         console.log(`beacon received: ${JSON.stringify(beacon)}`)
 
         const g2 = PointG2.fromHex(beacon.signature)
