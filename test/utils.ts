@@ -7,7 +7,7 @@ export async function assertError(fn: () => Promise<unknown>, message?: string):
     } catch (err) {
         return
     }
-    throw new AssertionError(message ?? `Expected error, but received ${result}`)
+    throw new AssertionError(message ?? `Expected error, but received ${JSON.stringify(result)}`)
 }
 
 export async function assertErrorMessage(fn: () => Promise<unknown>, expectedMessage: string): Promise<void> {
@@ -22,5 +22,5 @@ export async function assertErrorMessage(fn: () => Promise<unknown>, expectedMes
         }
         throw new AssertionError(`Received an error, but was ${err} instead of ${expectedMessage}`)
     }
-    throw new AssertionError(`Expected error, but received ${result}`)
+    throw new AssertionError(`Expected error, but received ${JSON.stringify(result)}`)
 }
