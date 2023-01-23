@@ -82,6 +82,19 @@ export function readAge(input: string): AgeEncryptionOutput {
     }
 }
 
+// validates the code points of the characters of the args in line with the go implementation
+// see: https://github.com/FiloSottile/age/blob/8e3f74c283b2e9b3cd0ec661fa4008504e536d20/internal/format/format.go#L301
+function validateArguments(args: string[]) {
+    args.forEach(arg => {
+        for (let i = 0; i < arg.length; i++) {
+            const charCode = arg.charCodeAt(i)
+            if (charCode < 33 || charCode > 126) {
+                throw Error(`Invalid character ${arg[i]} in argument ${arg}`)
+            }
+        }
+    })
+}
+
 // parses all the recipient stanzas from `lines`
 // modifies `lines`!!
 function parseRecipients(lines: Array<string>): Array<Stanza> {
@@ -90,6 +103,8 @@ function parseRecipients(lines: Array<string>): Array<Stanza> {
     for (let current = peek(lines); current != null && current.startsWith("->"); current = peek(lines)) {
         const [type, ...args] = current.slice(3, current.length).split(" ")
         lines.shift()
+
+        validateArguments(args)
 
         const body = parseRecipientBody(lines)
         if (!body) {

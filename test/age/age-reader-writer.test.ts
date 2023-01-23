@@ -42,6 +42,25 @@ describe("AGE", () => {
     })
 
     describe("reader", () => {
+        it("should succeed with ciphertext", () => {
+            const agePayload = "age-encryption.org/v1\n" +
+                "-> tlock 2304918 7672797f548f3f4748ac4bf3352fc6c6b6468c9ad40ad456a397545c6e2df5bf\n" +
+                "TtaPPedtx5LHNP0Nz4jBONFzz01yPvtp8MUH5xbZS+A\n" +
+                "--- FVEPwakX/J6JUIBAiyfcdxhWFsRreW6ESZXw/F28A/M\n" +
+                "Uw,�ʵ��B0�!w�\\)�x5�D���ezYf�R"
+
+            expect(() => readAge(agePayload)).not.to.throw()
+        })
+
+        it("should succeed even if there are no recipients", () => {
+            const agePayload = "age-encryption.org/v1\n" +
+                "TtaPPedtx5LHNP0Nz4jBONFzz01yPvtp8MUH5xbZS+A\n" +
+                "--- FVEPwakX/J6JUIBAiyfcdxhWFsRreW6ESZXw/F28A/M\n" +
+                "Uw,�ʵ��B0�!w�\\)�x5�D���ezYf�R"
+
+            expect(() => readAge(agePayload)).to.throw()
+        })
+
         it("should fail for missing version", () => {
             const agePayload = "-> tlock 2304918 7672797f548f3f4748ac4bf3352fc6c6b6468c9ad40ad456a397545c6e2df5bf\n" +
                 "hjpN1XsAAF1QiYTmfCyo3nPWU5coUxXN/tKvdPIJYO3yUQkF+DwtOaXsuxLZVAYg\n" +
@@ -55,15 +74,6 @@ describe("AGE", () => {
 
         it("should fail for an empty input", () => {
             expect(() => readAge("")).to.throw()
-        })
-
-        it("should succeed even if there are no recipients", () => {
-            const agePayload = "age-encryption.org/v1\n" +
-                "TtaPPedtx5LHNP0Nz4jBONFzz01yPvtp8MUH5xbZS+A\n" +
-                "--- FVEPwakX/J6JUIBAiyfcdxhWFsRreW6ESZXw/F28A/M\n" +
-                "Uw,�ʵ��B0�!w�\\)�x5�D���ezYf�R"
-
-            expect(() => readAge(agePayload)).to.throw()
         })
 
         it("should fail if recipients are missing bodies", () => {
@@ -95,16 +105,6 @@ describe("AGE", () => {
             expect(() => readAge(agePayload)).not.to.throw()
         })
 
-        it("should succeed with ciphertext", () => {
-            const agePayload = "age-encryption.org/v1\n" +
-                "-> tlock 2304918 7672797f548f3f4748ac4bf3352fc6c6b6468c9ad40ad456a397545c6e2df5bf\n" +
-                "TtaPPedtx5LHNP0Nz4jBONFzz01yPvtp8MUH5xbZS+A\n" +
-                "--- FVEPwakX/J6JUIBAiyfcdxhWFsRreW6ESZXw/F28A/M\n" +
-                "Uw,�ʵ��B0�!w�\\)�x5�D���ezYf�R"
-
-            expect(() => readAge(agePayload)).not.to.throw()
-        })
-
         it("should succeed for recipients with multiple payload lines", () => {
             const agePayload = "age-encryption.org/v1\n" +
                 "-> tlock 2612487 7672797f548f3f4748ac4bf3352fc6c6b6468c9ad40ad456a397545c6e2df5bf\n" +
@@ -127,6 +127,26 @@ describe("AGE", () => {
                 "/C�ñKË¤rJêÿ;\"c0ï���³��pÕØùl�«À�^M«�"
 
             expect(() => readAge(agePayload)).to.throw()
+        })
+
+        it("should fail if the argument contains invalid characters", () => {
+            // the euro sign has too high a character code to be accepted
+            const charTooHighPayload = "age-encryption.org/v1\n" +
+                "-> tlock 2304918 76727€7f548f3f4748ac4bf3352fc6c6b6468c9ad40ad456a397545c6e2df5bf\n" +
+                "TtaPPedtx5LHNP0Nz4jBONFzz01yPvtp8MUH5xbZS+A\n" +
+                "--- FVEPwakX/J6JUIBAiyfcdxhWFsRreW6ESZXw/F28A/M\n" +
+                "Uw,�ʵ��B0�!w�\\)�x5�D���ezYf�R"
+
+            expect(() => readAge(charTooHighPayload)).to.throw()
+
+            // the null separator is too low in the character range to be valid
+            const charTooLowPayload = "age-encryption.org/v1\n" +
+                "-> tlock 2304918 76727�7f548f3f4748ac4bf3352fc6c6b6468c9ad40ad456a397545c6e2df5bf\n" +
+                "TtaPPedtx5LHNP0Nz4jBONFzz01yPvtp8MUH5xbZS+A\n" +
+                "--- FVEPwakX/J6JUIBAiyfcdxhWFsRreW6ESZXw/F28A/M\n" +
+                "Uw,�ʵ��B0�!w�\\)�x5�D���ezYf�R"
+
+            expect(() => readAge(charTooLowPayload)).to.throw()
         })
     })
 })
