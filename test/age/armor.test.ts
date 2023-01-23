@@ -58,5 +58,23 @@ describe("armor", () => {
             const somePlaintext = "wow that's a lot of armor"
             expect(decodeArmor("   \n " + encodeArmor(somePlaintext) + "\t \n  ")).to.equal(somePlaintext)
         })
+
+        it("should throw an error if there are more than 1024 chars of whitespace after the payload", () => {
+            const payload = encodeArmor("hello world")
+            const whitespace = " ".repeat(1025)
+
+            expect(() => decodeArmor(payload + whitespace)).to.throw()
+        })
+        it("should throw an error if there is extra data after whitespace at the end of the armor payload", () => {
+            const payload = encodeArmor("hello world")
+
+            expect(() => decodeArmor(payload + "    " + "more data!")).to.throw()
+        })
+
+        it("should throw an error if there is extra data at the end of the armor payload", () => {
+            const payload = encodeArmor("hello world")
+
+            expect(() => decodeArmor(payload + "more data!")).to.throw()
+        })
     })
 })
