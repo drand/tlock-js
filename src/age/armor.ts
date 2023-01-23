@@ -20,7 +20,15 @@ export function encodeArmor(input: string, chunkSize = 64): string {
 // and it satisfies some security properties
 export function decodeArmor(armor: string, chunkSize = 64): string {
     // could start/end with space or newlines, let's strip them
-    armor = armor.trim()
+    armor = armor.trimStart()
+    const trimmedStartLength = armor.length
+    armor = armor.trimEnd()
+
+    // for compliance with the go age implementation, we deny more than 1024 whitespace chars:
+    // see: https://github.com/FiloSottile/age/blob/8e3f74c283b2e9b3cd0ec661fa4008504e536d20/armor/armor.go#L104
+    if (armor.length + 1024 < trimmedStartLength) {
+        throw Error("too much whitespace at the end of the armor payload")
+    }
 
     if (!armor.startsWith(header)) {
         throw Error(`Armor cannot be decoded if it does not start with a header! i.e. ${header}`)
