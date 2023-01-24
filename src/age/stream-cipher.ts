@@ -14,7 +14,7 @@ const NONCE_SIZE = 12 // STREAM nonce size
 
 // due to using a 32bit uint for the counter, this is the max
 // value the counter can be without risking a nonce reuse
-const COUNTER_MAX = Math.pow(2, 32)
+const COUNTER_MAX = Math.pow(2, 32) - 1
 
 type ui8a = Uint8Array
 
