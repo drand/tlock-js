@@ -12,6 +12,12 @@ tlock-js uses [AGE](https://age-encryption.org/v1) to symmetrically encrypt a pa
 - run the tests with `npm test`
 - run the linter and fix the problems by running `npm run lint:fix`
 
+## Using it as a library
+- install the latest version using `npm install tlock-js`
+- install the drand client using `npm install drand-client`
+
+Note: early versions of node may need to pull in a `fetch` polyfill; versions 17+ have `fetch` already, but it may be behind the `--experimental-modules` flag.
+
 ## API
 ### `timelockEncrypt` 
 This encrypts a payload that can only be decrypted when the `roundNumber` has been reached.  
@@ -41,6 +47,10 @@ export default {
     },
 };
 ```
+
+### npm packaging
+The github actions create a `dist` folder and move the package.json and some other bits in order to do some packaging, thus running `npm pack` in the root dir will not give the expected results. Similarly, the `main`, `module` and `types` keys in the `package.json` are relative to the `dist` dir.
+
 
 ### License
 
