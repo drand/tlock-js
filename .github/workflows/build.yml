@@ -23,6 +23,9 @@ jobs:
           npm ci
           npm run build:ci
 
+      - name: Copy relevant documentation into the build folder
+        run: cp package.json README.md LICENSE-APACHE LICENSE-MIT ./dist
+
       - name: Publish to npmjs
         uses: JS-DevTools/npm-publish@v1
         with:
@@ -31,3 +34,4 @@ jobs:
           dry-run: ${{ github.ref != 'refs/heads/master' }}
           # don't try and deploy if versions haven't changed
           check-version: true
+          package: dist/package.json
