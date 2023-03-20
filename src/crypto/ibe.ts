@@ -55,7 +55,7 @@ export async function encryptOnG2(master: PointG2, ID: Uint8Array, msg: Uint8Arr
     }
 
 
-    // 1. Compute Gid = e(master,Q_id)
+    // 1. Compute Gid = e(Q_id, master)
     const Qid = await bls.PointG1.hashToCurve(ID)
     const Gid = bls.pairing(Qid, master)
 
@@ -111,7 +111,7 @@ export async function decryptOnG1(p: PointG2, c: Ciphertext): Promise<Uint8Array
 }
 
 export async function decryptOnG2(p: PointG1, c: CiphertextOnG2): Promise<Uint8Array> {
-    // 1. Compute sigma = V XOR H2(e(rP,private))
+    // 1. Compute sigma = V XOR H2(e(private, rP))
     const gidt = bls.pairing(p, c.U)
     const hgidt = gtToHash(gidt, c.W.length)
 
