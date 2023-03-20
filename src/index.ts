@@ -18,21 +18,18 @@ import {version} from "../package.json"
 export async function timelockEncrypt(
     roundNumber: number,
     payload: Buffer,
-    chainClient: ChainClient,
-    swap = false
+    chainClient: ChainClient
 ): Promise<string> {
-
-    const timelockEncrypter = createTimelockEncrypter(chainClient, roundNumber, swap)
+    const timelockEncrypter = createTimelockEncrypter(chainClient, roundNumber)
     const agePayload = await encryptAge(payload, timelockEncrypter)
     return encodeArmor(agePayload)
 }
 
 export async function timelockDecrypt(
     ciphertext: string,
-    chainClient: ChainClient,
-    swap = false
+    chainClient: ChainClient
 ): Promise<string> {
-    const timelockDecrypter = createTimelockDecrypter(chainClient, swap)
+    const timelockDecrypter = createTimelockDecrypter(chainClient)
 
     let cipher = ciphertext
     if (isProbablyArmored(ciphertext)) {

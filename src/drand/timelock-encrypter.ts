@@ -5,7 +5,7 @@ import {ChainClient} from "drand-client"
 import {Stanza} from "../age/age-encrypt-decrypt"
 import {Ciphertext, CiphertextOnG2} from "../crypto/ibe"
 
-export function createTimelockEncrypter(client: ChainClient, roundNumber: number, swapped = false) {
+export function createTimelockEncrypter(client: ChainClient, roundNumber: number) {
     if (roundNumber < 1) {
         throw Error("You cannot encrypt for a roundNumber less than 1 (genesis = 0)")
     }
@@ -14,14 +14,20 @@ export function createTimelockEncrypter(client: ChainClient, roundNumber: number
         const chainInfo = await client.chain().info()
         const id = hashedRoundNumber(roundNumber)
         let ciphertext: Ciphertext | CiphertextOnG2
-        if (!swapped) {
-            const point = PointG1.fromHex(chainInfo.public_key)
-            ciphertext = await ibe.encryptOnG1(point, id, fileKey)
-        } else {
-            const point = PointG2.fromHex(chainInfo.public_key)
-            ciphertext = await ibe.encryptOnG2(point, id, fileKey)
+        switch (chainInfo.schemeID) {
+            case "pedersen-bls-unchained": {
+                const point = PointG1.fromHex(chainInfo.public_key)
+                ciphertext = await ibe.encryptOnG1(point, id, fileKey)
+            }
+                break;
+            case "bls-unchained-on-g1": {
+                const point = PointG2.fromHex(chainInfo.public_key)
+                ciphertext = await ibe.encryptOnG2(point, id, fileKey)
+            }
+                break;
+            default:
+                throw Error(`Unsupported scheme: ${chainInfo.schemeID} - you must use a drand network with an unchained scheme for timelock encryption!`)
         }
-
         return [{
             type: "tlock",
             args: [`${roundNumber}`, chainInfo.hash],
