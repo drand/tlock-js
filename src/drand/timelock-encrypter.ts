@@ -16,10 +16,10 @@ export function createTimelockEncrypter(client: ChainClient, roundNumber: number
         let ciphertext: Ciphertext | CiphertextOnG2
         if (!swapped) {
             const point = PointG1.fromHex(chainInfo.public_key)
-            ciphertext = await ibe.encrypt(point, id, fileKey)
+            ciphertext = await ibe.encryptOnG1(point, id, fileKey)
         } else {
             const point = PointG2.fromHex(chainInfo.public_key)
-            ciphertext = await ibe.encryptToG2(point, id, fileKey)
+            ciphertext = await ibe.encryptOnG2(point, id, fileKey)
         }
 
         return [{
