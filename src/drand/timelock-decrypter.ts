@@ -2,9 +2,9 @@ import {Stanza} from "../age/age-encrypt-decrypt"
 import {PointG1, PointG2} from "@noble/bls12-381"
 import {ChainClient, fetchBeacon} from "drand-client"
 import * as ibe from "../crypto/ibe"
-import {Ciphertext} from "../crypto/ibe"
+import {Ciphertext, CiphertextOnG2} from "../crypto/ibe"
 
-export function createTimelockDecrypter(network: ChainClient) {
+export function createTimelockDecrypter(network: ChainClient, swapped = false) {
     return async (recipients: Array<Stanza>): Promise<Uint8Array> => {
         if (recipients.length !== 1) {
             throw Error("Timelock only expects a single stanza!")
@@ -24,9 +24,15 @@ export function createTimelockDecrypter(network: ChainClient) {
         const beacon = await fetchBeacon(network, parseRoundNumber(args))
         console.log(`beacon received: ${JSON.stringify(beacon)}`)
 
-        const g2 = PointG2.fromHex(beacon.signature)
-        const ciphertext = parseCiphertext(body)
-        return await ibe.decrypt(g2, ciphertext)
+        if (!swapped) {
+            const g2 = PointG2.fromHex(beacon.signature)
+            const ciphertext = parseCiphertext(body)
+            return await ibe.decrypt(g2, ciphertext)
+        } else {
+            const g1 = PointG1.fromHex(beacon.signature)
+            const cipherText = parseCiphertextOnG2(body)
+            return ibe.decryptFromG2(g1, cipherText)
+        }
     }
 }
 
@@ -49,6 +55,19 @@ function parseCiphertext(body: Uint8Array): Ciphertext {
     const eachHalf = theRest.length / 2
 
     const U = PointG1.fromHex(Buffer.from(g1Bytes).toString("hex"))
+    const V = theRest.subarray(0, eachHalf)
+    const W = theRest.subarray(eachHalf)
+
+    return {U, V, W}
+}
+
+function parseCiphertextOnG2(body: Uint8Array): CiphertextOnG2 {
+    const g1Length = PointG2.BASE.toRawBytes(true).byteLength
+    const g1Bytes = body.subarray(0, g1Length)
+    const theRest = body.subarray(g1Length)
+    const eachHalf = theRest.length / 2
+
+    const U = PointG2.fromHex(Buffer.from(g1Bytes).toString("hex"))
     const V = theRest.subarray(0, eachHalf)
     const W = theRest.subarray(eachHalf)
 
