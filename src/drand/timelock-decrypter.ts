@@ -27,11 +27,11 @@ export function createTimelockDecrypter(network: ChainClient, swapped = false) {
         if (!swapped) {
             const g2 = PointG2.fromHex(beacon.signature)
             const ciphertext = parseCiphertext(body)
-            return await ibe.decrypt(g2, ciphertext)
+            return await ibe.decryptOnG1(g2, ciphertext)
         } else {
             const g1 = PointG1.fromHex(beacon.signature)
             const cipherText = parseCiphertextOnG2(body)
-            return ibe.decryptFromG2(g1, cipherText)
+            return ibe.decryptOnG2(g1, cipherText)
         }
     }
 }

@@ -161,17 +161,19 @@ function h3(sigma: Uint8Array, msg: Uint8Array) {
     for (let i = 1; i < 65535; i++) {
         let data = h3ret
         data = sha256.create()
-            .update(getLittleEndianByteArrayFromUint16(i))
+            .update(create16BitUintBuffer(i))
             .update(data)
+            .digest()
         // assuming Big Endianness
         data[0] = data[0] >> BitsToMaskForBLS12381
-        let n = bytesToNumberBE(data)
-        if  (n < bls.CURVE.r) {
+        const n = bytesToNumberBE(data)
+        if (n < bls.CURVE.r) {
             return n
         }
     }
 
-    throw new Error("invalid proof: rP check failed")}
+    throw new Error("invalid proof: rP check failed")
+}
 
 function h4(sigma: Uint8Array, len: number): Uint8Array {
     const h4sigma = sha256
@@ -181,4 +183,17 @@ function h4(sigma: Uint8Array, len: number): Uint8Array {
         .digest()
 
     return h4sigma.slice(0, len)
+}
+
+function create16BitUintBuffer(input: number): Buffer {
+    if (input < 0) {
+        throw Error("cannot write a negative value as uint!")
+    }
+    if (input > (2 ** 16)) {
+        throw Error("input value too large to fit in a uint16!")
+    }
+
+    const buf = Buffer.alloc(2)
+    buf.writeUint16LE(input)
+    return buf
 }
