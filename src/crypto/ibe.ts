@@ -15,10 +15,9 @@ export interface CiphertextOnG2 {
     W: Uint8Array
 }
 
-export async function encrypt(master: PointG1, ID: Uint8Array, msg: Uint8Array): Promise<Ciphertext> {
-    if (msg.length >> 16 > 0) {
-        // we're using blake2 as XOF which only outputs at most 2^16-1 bytes
-        throw new Error("cannot encrypt messages larger than 2^16-1 bytes.")
+export async function encryptOnG1(master: PointG1, ID: Uint8Array, msg: Uint8Array): Promise<Ciphertext> {
+    if (msg.length >> 8 > 1) {
+        throw new Error("cannot encrypt messages larger than our hash output: 256 bits.")
     }
 
     // 1. Compute Gid = e(master,Q_id)
@@ -50,11 +49,11 @@ export async function encrypt(master: PointG1, ID: Uint8Array, msg: Uint8Array):
     }
 }
 
-export async function encryptToG2(master: PointG2, ID: Uint8Array, msg: Uint8Array): Promise<CiphertextOnG2> {
-    if (msg.length >> 16 > 0) {
-        // we're using blake2 as XOF which only outputs at most 2^16-1 bytes
-        throw new Error("cannot encrypt messages larger than 2^16-1 bytes.")
+export async function encryptOnG2(master: PointG2, ID: Uint8Array, msg: Uint8Array): Promise<CiphertextOnG2> {
+    if (msg.length >> 8 > 1) {
+        throw new Error("cannot encrypt messages larger than our hash output: 256 bits.")
     }
+
 
     // 1. Compute Gid = e(master,Q_id)
     const Qid = await bls.PointG1.hashToCurve(ID)
@@ -85,7 +84,7 @@ export async function encryptToG2(master: PointG2, ID: Uint8Array, msg: Uint8Arr
     }
 }
 
-export async function decrypt(p: PointG2, c: Ciphertext): Promise<Uint8Array> {
+export async function decryptOnG1(p: PointG2, c: Ciphertext): Promise<Uint8Array> {
     // 1. Compute sigma = V XOR H2(e(rP,private))
     const gidt = bls.pairing(c.U, p)
     const hgidt = gtToHash(gidt, c.W.length)
@@ -111,7 +110,7 @@ export async function decrypt(p: PointG2, c: Ciphertext): Promise<Uint8Array> {
     return msg
 }
 
-export async function decryptFromG2(p: PointG1, c: CiphertextOnG2): Promise<Uint8Array> {
+export async function decryptOnG2(p: PointG1, c: CiphertextOnG2): Promise<Uint8Array> {
     // 1. Compute sigma = V XOR H2(e(rP,private))
     const gidt = bls.pairing(p, c.U)
     const hgidt = gtToHash(gidt, c.W.length)
@@ -146,6 +145,9 @@ export function gtToHash(gt: bls.Fp12, len: number): Uint8Array {
         .slice(0, len)
 }
 
+// Our IBE hashes
+const BitsToMaskForBLS12381 = 1
+
 function h3(sigma: Uint8Array, msg: Uint8Array) {
     const h3ret = sha256
         .create()
@@ -154,8 +156,22 @@ function h3(sigma: Uint8Array, msg: Uint8Array) {
         .update(msg)
         .digest()
 
-    return toField(h3ret)
-}
+    // We will hash iteratively: H(i || H("IBE-H3" || sigma || msg)) until we get a
+    // value that is suitable as a scalar.
+    for (let i = 1; i < 65535; i++) {
+        let data = h3ret
+        data = sha256.create()
+            .update(getLittleEndianByteArrayFromUint16(i))
+            .update(data)
+        // assuming Big Endianness
+        data[0] = data[0] >> BitsToMaskForBLS12381
+        let n = bytesToNumberBE(data)
+        if  (n < bls.CURVE.r) {
+            return n
+        }
+    }
+
+    throw new Error("invalid proof: rP check failed")}
 
 function h4(sigma: Uint8Array, len: number): Uint8Array {
     const h4sigma = sha256
@@ -165,22 +181,4 @@ function h4(sigma: Uint8Array, len: number): Uint8Array {
         .digest()
 
     return h4sigma.slice(0, len)
-}
-
-// Our IBE hashes
-const BitsToMaskForBLS12381 = 1
-
-// we are hashing the data until we get a value smaller than the curve order
-export function toField(h3ret: Uint8Array) {
-    let data = h3ret
-    // assuming Big Endianness
-    let n: bigint = bytesToNumberBE(data)
-    do {
-        data = sha256(data)
-        // assuming Big Endianness
-        data[0] = data[0] >> BitsToMaskForBLS12381
-        n = bytesToNumberBE(data)
-    } while (n <= 0 || n > bls.CURVE.r)
-
-    return n
 }
