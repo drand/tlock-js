@@ -2,7 +2,8 @@ import {expect} from "chai"
 import {MockDrandClient} from "../drand/mock-drand-client"
 import {timelockDecrypt} from "../../src"
 
-test("payloads encrypted with the go impl should decrypt successfully", async () => {
+// skipping until we have created new test vectors from the go code
+test.skip("payloads encrypted with the go impl should decrypt successfully", async () => {
     const validBeacon = {
         round: 20000,
         randomness: "49891540810f410d114b25bdd47e6c14d316da3e513a82e91cc705a9bbb43fb3",
