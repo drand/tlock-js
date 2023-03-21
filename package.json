@@ -1,6 +1,6 @@
 {
   "name": "tlock-js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A library to encrypt data that can only be decrypted in the future using drand",
   "source": "src/index.ts",
   "main": "index.js",
@@ -50,7 +50,7 @@
     "@noble/hashes": "^1.1.2",
     "@stablelib/chacha20poly1305": "^1.0.1",
     "buffer": "^6.0.3",
-    "drand-client": "^1.0.0-pre.11"
+    "drand-client": "1.0.0"
   },
   "browserslist": [
     "> 0.5%",

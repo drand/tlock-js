@@ -5,7 +5,7 @@ import {
     RandomnessBeacon
 } from "drand-client"
 import {defaultChainInfo, defaultChainUrl} from "../../src"
-import {TestnetChainInfo} from "../../src/drand/defaults";
+import {TESTNET_CHAIN_INFO} from "../../src/drand/defaults";
 
 class MockDrandClient implements ChainClient {
     options: ChainOptions = {
@@ -13,7 +13,7 @@ class MockDrandClient implements ChainClient {
         noCache: false,
     }
 
-    constructor(private beacon: RandomnessBeacon, private info: ChainInfo = TestnetChainInfo) {
+    constructor(private beacon: RandomnessBeacon, private info: ChainInfo = TESTNET_CHAIN_INFO) {
     }
 
     get(_: number): Promise<RandomnessBeacon> {
