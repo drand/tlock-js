@@ -13,7 +13,7 @@ import {decryptAge, encryptAge} from "./age/age-encrypt-decrypt"
 import {decodeArmor, encodeArmor, isProbablyArmored} from "./age/armor"
 import {createTimelockDecrypter} from "./drand/timelock-decrypter"
 import {defaultChainInfo, defaultChainUrl, MAINNET_CHAIN_URL, TESTNET_CHAIN_INFO, TESTNET_CHAIN_URL} from "./drand/defaults"
-import {version} from "../package.json"
+import {LIB_VERSION} from "./version"
 
 export async function timelockEncrypt(
     roundNumber: number,
@@ -42,7 +42,7 @@ export async function timelockDecrypt(
 export function testnetClient(): HttpChainClient {
     const chain = new HttpCachingChain(TESTNET_CHAIN_URL, defaultChainOptions)
     return new HttpChainClient(chain, defaultChainOptions, {
-        userAgent: `tlock-js-${version}`
+        userAgent: `tlock-js-${LIB_VERSION}`
     })
 }
 
