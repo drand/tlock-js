@@ -61,7 +61,7 @@ The github actions create a `dist` folder and move the package.json and some oth
 
 ## Get in touch
 
-- [Open an issue](https://github.com/drand/tlock/issues/new/choose) for feature requests or to report a bug.
+- [Open an issue](https://github.com/drand/tlock-js/issues/new/choose) for feature requests or to report a bug.
 - [Join the drand Slack](https://join.slack.com/t/drandworkspace/shared_invite/zt-19u4rf6if-bf7lxIvF2zYn4~TrBwfkiA) to discuss Timelock, randomness beacons and more.
 - Follow the [drand blog](https://drand.love/blog/) for our articles.
 - Follow the [@drand_loe](https://twitter.com/drand_loe) account on Twitter to stay tuned.
