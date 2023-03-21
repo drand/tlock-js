@@ -1,7 +1,7 @@
 import {expect} from "chai"
 import {MockDrandClient} from "../drand/mock-drand-client"
 import {timelockDecrypt, timelockEncrypt} from "../../src"
-import {MainnetChainInfo, TestnetChainInfo} from "../../src/drand/defaults";
+import {MAINNET_CHAIN_INFO, TESTNET_CHAIN_INFO} from "../../src/drand/defaults";
 import {assertError, assertErrorMessage} from "../utils";
 
 test("payloads encrypted with the old go impl should not decrypt anymore", async () => {
@@ -10,7 +10,7 @@ test("payloads encrypted with the old go impl should not decrypt anymore", async
         randomness: "49891540810f410d114b25bdd47e6c14d316da3e513a82e91cc705a9bbb43fb3",
         signature: "91130cdcb1d7cbc402bbb10caecf3eaa2aa041a8bdc5a3791f24c033431bc0c7a0275c2b76fdcc2031dd613b2641a1a715eb6e97dce0a9c0325426315d5da276bd5ebbf07d2e6a082697e31db1d3e8f7813797d3c5a7ca95e90167404426a7c3"
     }
-    const mockClient = new MockDrandClient(validBeacon, TestnetChainInfo)
+    const mockClient = new MockDrandClient(validBeacon, TESTNET_CHAIN_INFO)
     const payloadFromGoImpl = "-----BEGIN AGE ENCRYPTED FILE-----\n" +
         "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHRsb2NrIDIwMDAwIDc2NzI3OTdmNTQ4\n" +
         "ZjNmNDc0OGFjNGJmMzM1MmZjNmM2YjY0NjhjOWFkNDBhZDQ1NmEzOTc1NDVjNmUy\n" +
@@ -30,7 +30,7 @@ test("payloads encrypted with the go impl should decrypt successfully with G1 be
         randomness: "08eb40c1dff4076da53d222b2076f06c144391445cfac750815d5cacf51bf7c2",
         signature: "a050676d1a1b6ceedb5fb3281cdfe88695199971426ff003c0862460b3a72811328a07ecd53b7d57fc82bb67f35efaf1"
     }
-    const mockClient = new MockDrandClient(validBeaconOnG1, MainnetChainInfo)
+    const mockClient = new MockDrandClient(validBeaconOnG1, MAINNET_CHAIN_INFO)
     const payloadFromGoImpl = `-----BEGIN AGE ENCRYPTED FILE-----
 YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHRsb2NrIDIgZGJkNTA2ZDZlZjc2ZTVm
 Mzg2ZjQxYzY1MWRjYjgwOGM1YmNiZDc1NDcxY2M0ZWFmYTNmNGRmN2FkNGU0YzQ5
@@ -52,7 +52,7 @@ test("payloads encrypted with the go impl should decrypt successfully with G2 be
         randomness: "8430af445106a217c174b6265093d386bd3631ccb3dae833b5e645abbb281323",
         signature: "86ecea71376e78abd19aaf0ad52f462a6483626563b1023bd04815a7b953da888c74f5bf6ee672a5688603ab310026230522898f33f23a7de363c66f90ffd49ec77ebf7f6c1478a9ecd6e714b4d532ab43d044da0a16fed13b4791d7fc999e2b"
     }
-    const mockClient = new MockDrandClient(validBeaconOnG2, TestnetChainInfo)
+    const mockClient = new MockDrandClient(validBeaconOnG2, TESTNET_CHAIN_INFO)
     const payloadFromGoImpl = `-----BEGIN AGE ENCRYPTED FILE-----
 YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHRsb2NrIDEgNzY3Mjc5N2Y1NDhmM2Y0
 NzQ4YWM0YmYzMzUyZmM2YzZiNjQ2OGM5YWQ0MGFkNDU2YTM5NzU0NWM2ZTJkZjVi
