@@ -9,6 +9,7 @@ tlock-js uses [AGE](https://age-encryption.org/v1) to symmetrically encrypt a pa
  
 ## Quickstart
 - install the dependencies by running `npm install`
+- compile the code with `npm run compile`
 - run the tests with `npm test`
 - run the linter and fix the problems by running `npm run lint:fix`
 
