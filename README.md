@@ -19,6 +19,11 @@ tlock-js uses [AGE](https://age-encryption.org/v1) to symmetrically encrypt a pa
 
 Note: early versions of node may need to pull in a `fetch` polyfill; versions 17+ have `fetch` already, but it may be behind the `--experimental-modules` flag.
 
+### Test our Web demo
+
+We have a [live web-demo](https://timevault.drand.love/) relying on this library to allow you to test Timelock encryption/decryption directly in your browser now by [visiting Timevault](https://timevault.drand.love/).
+Everything is done locally in your browser and it only fetches the drand beacons it needs to decrypt your ciphertexts, nothing else, no logging, no nothing.
+
 ## API
 ### `timelockEncrypt` 
 This encrypts a payload that can only be decrypted when the `roundNumber` has been reached.  
@@ -52,8 +57,18 @@ export default {
 ### npm packaging
 The github actions create a `dist` folder and move the package.json and some other bits in order to do some packaging, thus running `npm pack` in the root dir will not give the expected results. Similarly, the `main`, `module` and `types` keys in the `package.json` are relative to the `dist` dir.
 
+---
 
-### License
+## Get in touch
+
+- [Open an issue](https://github.com/drand/tlock/issues/new/choose) for feature requests or to report a bug.
+- [Join the drand Slack](https://join.slack.com/t/drandworkspace/shared_invite/zt-19u4rf6if-bf7lxIvF2zYn4~TrBwfkiA) to discuss Timelock, randomness beacons and more.
+- Follow the [drand blog](https://drand.love/blog/) for our articles.
+- Follow the [@drand_loe](https://twitter.com/drand_loe) account on Twitter to stay tuned.
+
+---
+
+## License
 
 This project is licensed using the [Permissive License Stack](https://protocol.ai/blog/announcing-the-permissive-license-stack/) which means that all contributions are available under the most permissive commonly-used licenses, and dependent projects can pick the license that best suits them.
 
