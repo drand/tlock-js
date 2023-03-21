@@ -5,3 +5,4 @@
 /dist
 /.vscode
 /.idea*
+./src/version.ts
