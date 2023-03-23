@@ -7,11 +7,13 @@ import * as chai from "chai"
 
 export function createTimelockDecrypter(network: ChainClient) {
     return async (recipients: Array<Stanza>): Promise<Uint8Array> => {
-        if (recipients.length !== 1) {
-            throw Error("Timelock only expects a single stanza!")
-        }
 
-        const {type, args, body} = recipients[0]
+        const tlockStanza = recipients.find(it => it.type === "tlock")
+
+        if (!tlockStanza) {
+            throw Error("You must pass a timelock stanza!")
+        }
+        const {type, args, body} = tlockStanza
 
         if (type !== "tlock") {
             throw Error(`Timelock expects the type of the stanza to be "tlock`)

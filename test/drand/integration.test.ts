@@ -22,4 +22,20 @@ describe("integration", () => {
         await expect(timelockEncrypt(1, Buffer.from("hello world"), chainedChainClient)).rejects.toThrow()
         await expect(timelockDecrypt("some-great-ciphertext", chainedChainClient)).rejects.toThrow()
     })
+    it("should be compatible with a ciphertext created using the go tlock lib", async () => {
+        const ciphertext = "-----BEGIN AGE ENCRYPTED FILE-----\n" +
+            "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHRsb2NrIDYxNzEyNSBkYmQ1MDZkNmVm\n" +
+            "NzZlNWYzODZmNDFjNjUxZGNiODA4YzViY2JkNzU0NzFjYzRlYWZhM2Y0ZGY3YWQ0\n" +
+            "ZTRjNDkzCmp3d0VJRld2TkNiK21ZNDBTYlEzMHp1RkJxUDdpcU9SVHNRcWxncEFL\n" +
+            "TDRNVEVPa2c4RFlDa2w3Q2w0MUJHMFkKQjMzOXhFQ1l6S0ZrdktIMnR4WUpmM21C\n" +
+            "NWhtRGg1ZzNJenhscjNuVTlvSDJSNWFkUVFRckcvZjBwZGoybHdFQQpRSnBuYkRm\n" +
+            "S216OEh2QVd5YmVHekJ6YktMNkRSTnduTkdyVk5uRkFwWDFBCi0tLSB6aGRxeW9U\n" +
+            "NWlIeDY4M2RHaEtuNEp2cU1YZmduakZGSDlIeVNQNzVqS2RvCiC3i/d22MKp28cP\n" +
+            "c2TwZmXAKEEDrcKgVp85arbO6P7vL2KWODg=\n" +
+            "-----END AGE ENCRYPTED FILE-----\n"
+
+        const plaintext = timelockDecrypt(ciphertext, mainnetClient())
+        console.log(plaintext)
+        await expect(plaintext).resolves.toEqual("blah\n")
+    })
 })

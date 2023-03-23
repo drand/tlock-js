@@ -44,6 +44,21 @@ describe("timelock decrypter", () => {
         await assertError(() => createTimelockDecrypter(mockClient)([stanza, stanza]))
     })
 
+    it("should ignore additional non-tlock stanzas", async () => {
+        const plaintext = "hello world"
+        const ciphertext = await timelockEncrypt(1, Buffer.from(plaintext), mockClient)
+        const parsedAgeEncryption = readAge(decodeArmor(ciphertext))
+
+        const stanzas = [{
+            type: "bananas",
+            args: ["1", "2", "3"],
+            body: Buffer.from("cafebabe")
+        }, ...parsedAgeEncryption.header.recipients]
+
+        const decryptedFileKey = await createTimelockDecrypter(mockClient)(stanzas)
+        expect(decryptedFileKey.length).to.be.greaterThan(0)
+    })
+
     it("should blow up if roundNumber or chainHash are missing from the args of the stanza", async () => {
         const missingChainHash = {
             type: "tlock",
