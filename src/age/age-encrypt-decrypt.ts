@@ -58,7 +58,7 @@ async function encryptedPayload(fileKey: Uint8Array, payload: Uint8Array): Promi
 export async function decryptAge(
     payload: string,
     unwrapFileKey: DecryptionWrapper = NoOpEncDec.unwrap
-): Promise<string> {
+): Promise<Buffer> {
     const encryptedPayload = readAge(payload)
     const version = encryptedPayload.header.version
     if (version !== ageVersion) {
@@ -79,5 +79,5 @@ export async function decryptAge(
     const hkdfKey = hkdf(sha256, fileKey, nonce, Buffer.from(hkdfBodyMessage, "utf8"), hkdfKeyLengthBytes)
 
     const plaintext = STREAM.open(cipherText, hkdfKey)
-    return Buffer.from(plaintext).toString("utf8")
+    return Buffer.from(plaintext)
 }

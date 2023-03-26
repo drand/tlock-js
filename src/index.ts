@@ -28,7 +28,7 @@ export async function timelockEncrypt(
 export async function timelockDecrypt(
     ciphertext: string,
     chainClient: ChainClient
-): Promise<string> {
+): Promise<Buffer> {
     const timelockDecrypter = createTimelockDecrypter(chainClient)
 
     let cipher = ciphertext
