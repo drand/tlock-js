@@ -26,7 +26,7 @@ describe("age", () => {
         it("can decrypt something that has been encrypted using ageEncrypt()", async () => {
             const encryptedPayload = await encryptAge(helloWorldBytes)
 
-            expect(await decryptAge(encryptedPayload)).to.deep.equal(helloWorld)
+            expect((await decryptAge(encryptedPayload)).toString('utf8')).to.deep.equal(helloWorld)
         })
 
         it("propagates errors from the decryptionWrapper", async () => {
@@ -73,7 +73,7 @@ describe("age", () => {
 
             const ciphertext = await encryptAge(Buffer.from(bigPayload))
             const result = await decryptAge(ciphertext)
-            expect(result).to.equal(bigPayload)
+            expect(result.toString('utf8')).to.equal(bigPayload)
         })
 
         it("should correctly encrypt and decrypt special characters", async () => {
@@ -81,7 +81,7 @@ describe("age", () => {
             const ciphertext = await encryptAge(Buffer.from(someFrench))
             const result = await decryptAge(ciphertext)
 
-            expect(result).to.equal(someFrench)
+            expect(result.toString('utf8')).to.equal(someFrench)
         })
     })
 })

@@ -21,7 +21,7 @@ test("payloads encrypted with the old go impl should not decrypt anymore", async
         "NdqmZSVrmhIAfkALCQi1PQw3+N88xe+5zjHy4Lpxi8uN2GMlud6x49yzcYI=\n" +
         "-----END AGE ENCRYPTED FILE-----"
 
-    await assertErrorMessage(() => timelockDecrypt(payloadFromGoImpl, mockClient).toString('utf8'),"invalid proof: rP check failed")
+    await assertErrorMessage(() => timelockDecrypt(payloadFromGoImpl, mockClient),"invalid proof: rP check failed")
 })
 
 test("payloads encrypted with the go impl should decrypt successfully with G1 beacon", async () => {
