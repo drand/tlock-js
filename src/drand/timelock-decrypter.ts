@@ -1,13 +1,12 @@
 import {Stanza} from "../age/age-encrypt-decrypt"
 import {PointG1, PointG2} from "@noble/bls12-381"
-import {ChainClient, fetchBeacon} from "drand-client"
+import {ChainClient, fetchBeacon, roundTime} from "drand-client"
 import * as ibe from "../crypto/ibe"
 import {Ciphertext, CiphertextOnG2} from "../crypto/ibe"
 import * as chai from "chai"
 
 export function createTimelockDecrypter(network: ChainClient) {
     return async (recipients: Array<Stanza>): Promise<Uint8Array> => {
-
         const tlockStanza = recipients.find(it => it.type === "tlock")
 
         if (!tlockStanza) {
@@ -25,7 +24,12 @@ export function createTimelockDecrypter(network: ChainClient) {
 
         const chainInfo = await network.chain().info()
         // should probably verify chain hash here too
-        const beacon = await fetchBeacon(network, parseRoundNumber(args))
+        const roundNumber = parseRoundNumber(args)
+        if (roundTime(chainInfo, roundNumber) > Date.now()) {
+            throw Error("It's too early to decrypt the ciphertext")
+        }
+
+        const beacon = await fetchBeacon(network, roundNumber)
         console.log(`beacon received: ${JSON.stringify(beacon)}`)
 
         switch (chainInfo.schemeID) {

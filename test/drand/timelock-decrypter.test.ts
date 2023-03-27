@@ -94,4 +94,14 @@ describe("timelock decrypter", () => {
 
         await assertError(() => createTimelockDecrypter(mockClient)([invalidChainHashArg]))
     })
+
+    it("should blow up if the decryption time is in the future", async () => {
+        const plaintext = "hello world"
+        const someHugeFutureRound = 2251799813685248 // max js number
+        const ciphertext = await timelockEncrypt(someHugeFutureRound, Buffer.from(plaintext), mockClient)
+
+        const parsedAgeEncryption = readAge(decodeArmor(ciphertext))
+
+        await assertError(() => createTimelockDecrypter(mockClient)(parsedAgeEncryption.header.recipients))
+    })
 })
