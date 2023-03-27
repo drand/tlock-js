@@ -35,3 +35,4 @@ jobs:
           # don't try and deploy if versions haven't changed
           check-version: true
           package: dist/package.json
+        if: github.event_name != 'pull_request'
