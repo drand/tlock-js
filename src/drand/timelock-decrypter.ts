@@ -26,7 +26,7 @@ export function createTimelockDecrypter(network: ChainClient) {
         // should probably verify chain hash here too
         const roundNumber = parseRoundNumber(args)
         if (roundTime(chainInfo, roundNumber) > Date.now()) {
-            throw Error("It's too early to decrypt the ciphertext")
+            throw Error(`It's too early to decrypt the ciphertext - decryptable at round ${roundNumber}`)
         }
 
         const beacon = await fetchBeacon(network, roundNumber)
