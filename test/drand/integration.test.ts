@@ -34,8 +34,8 @@ describe("integration", () => {
             "c2TwZmXAKEEDrcKgVp85arbO6P7vL2KWODg=\n" +
             "-----END AGE ENCRYPTED FILE-----\n"
 
-        const plaintext = timelockDecrypt(ciphertext, mainnetClient())
+        const plaintext = await timelockDecrypt(ciphertext, mainnetClient())
         console.log(plaintext)
-        await expect(plaintext).resolves.toEqual("blah\n")
+        expect(plaintext.toString("utf8")).toEqual("blah\n")
     })
 })
