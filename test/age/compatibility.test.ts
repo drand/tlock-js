@@ -43,7 +43,7 @@ z6hgtLUPYvAimgekc+CeyJ8fb/0MVrpq/Ewnx1MpKig8nQ==
 -----END AGE ENCRYPTED FILE-----`
     const plaintext = await timelockDecrypt(payloadFromGoImpl, mockClient)
 
-    expect(plaintext.toString('utf8')).to.equal("Hello drand World\n")
+    expect(plaintext.toString("utf8")).to.equal("Hello drand World\n")
 })
 
 test("payloads encrypted with the go impl should decrypt successfully with G2 beacon", async () => {
