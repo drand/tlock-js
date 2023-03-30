@@ -73,7 +73,7 @@ describe("age", () => {
 
             const ciphertext = await encryptAge(Buffer.from(bigPayload))
             const result = await decryptAge(ciphertext)
-            expect(result.toString('utf8')).to.equal(bigPayload)
+            expect(result.toString("utf8")).to.equal(bigPayload)
         })
 
         it("should correctly encrypt and decrypt special characters", async () => {
