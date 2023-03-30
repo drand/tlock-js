@@ -81,7 +81,7 @@ describe("age", () => {
             const ciphertext = await encryptAge(Buffer.from(someFrench))
             const result = await decryptAge(ciphertext)
 
-            expect(result.toString('utf8')).to.equal(someFrench)
+            expect(result.toString("utf8")).to.equal(someFrench)
         })
     })
 })
