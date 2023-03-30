@@ -8,7 +8,7 @@ describe("integration", () => {
         const ciphertext = await timelockEncrypt(1, Buffer.from(message), testnetClient())
         const plaintext = await timelockDecrypt(ciphertext, testnetClient())
 
-        expect(plaintext.toString('utf8')).toEqual(message)
+        expect(plaintext.toString("utf8")).toEqual(message)
     })
     it("should be able to encrypt and decrypt with g1/g2 swapped client", async () => {
         const message = "hello world and other things"
