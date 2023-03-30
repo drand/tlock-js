@@ -25,7 +25,7 @@ describe("timelock", () => {
             const plaintext = "hello world"
             const decryptedPayload = await timelockDecrypt(await timelockEncrypt(1, Buffer.from(plaintext), mockClient), mockClient)
 
-            expect(decryptedPayload.toString('utf8')).to.equal(plaintext)
+            expect(decryptedPayload.toString("utf8")).to.equal(plaintext)
         })
         it("should fail if an invalid beacon is returned", async () => {
             const plaintext = "hello world"
