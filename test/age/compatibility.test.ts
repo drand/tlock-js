@@ -64,5 +64,5 @@ HypjufJAgOSFJtWGfxQ=
 -----END AGE ENCRYPTED FILE-----`
     const plaintext = await timelockDecrypt(payloadFromGoImpl, mockClient)
 
-    expect(plaintext.toString('utf8')).to.equal("Hello dranders\n")
+    expect(plaintext.toString("utf8")).to.equal("Hello dranders\n")
 })
