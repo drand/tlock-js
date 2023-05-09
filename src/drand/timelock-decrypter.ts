@@ -3,7 +3,6 @@ import {PointG1, PointG2} from "@noble/bls12-381"
 import {ChainClient, fetchBeacon, roundTime} from "drand-client"
 import * as ibe from "../crypto/ibe"
 import {Ciphertext, CiphertextOnG2} from "../crypto/ibe"
-import * as chai from "chai"
 
 export function createTimelockDecrypter(network: ChainClient) {
     return async (recipients: Array<Stanza>): Promise<Uint8Array> => {
