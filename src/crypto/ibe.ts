@@ -1,6 +1,7 @@
 import * as bls from "@noble/bls12-381"
 import {PointG1, PointG2, utils} from "@noble/bls12-381"
 import {sha256} from "@noble/hashes/sha256"
+import { Buffer } from "buffer"
 import {bytesToNumberBE, fp12ToBytes, xor} from "./utils"
 
 export interface Ciphertext {

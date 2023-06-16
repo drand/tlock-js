@@ -5,6 +5,7 @@ import {NoOpEncDec} from "./no-op-encdec"
 import {readAge, writeAge} from "./age-reader-writer"
 import {sliceUntil, unpaddedBase64Buffer} from "./utils"
 import {createMacKey, random} from "./utils-crypto"
+import {Buffer} from "buffer"
 
 type FileKey = Uint8Array
 type EncryptionWrapper = (fileKey: FileKey) => Promise<Array<Stanza>>

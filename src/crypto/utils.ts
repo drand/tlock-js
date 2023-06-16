@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {Fp, Fp12, Fp2} from "@noble/bls12-381"
 
 // returns a new array with the xor of a ^ b

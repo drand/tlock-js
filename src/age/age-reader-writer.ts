@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {chunked, unpaddedBase64} from "./utils"
 import {createMacKey} from "./utils-crypto"
 

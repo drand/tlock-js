@@ -12,7 +12,7 @@ import {createTimelockEncrypter} from "./drand/timelock-encrypter"
 import {decryptAge, encryptAge} from "./age/age-encrypt-decrypt"
 import {decodeArmor, encodeArmor, isProbablyArmored} from "./age/armor"
 import {createTimelockDecrypter} from "./drand/timelock-decrypter"
-import {defaultChainInfo, defaultChainUrl, MAINNET_CHAIN_URL, TESTNET_CHAIN_INFO, TESTNET_CHAIN_URL} from "./drand/defaults"
+import {defaultChainInfo, defaultChainUrl, MAINNET_CHAIN_URL, TESTNET_CHAIN_URL} from "./drand/defaults"
 import {LIB_VERSION} from "./version"
 
 export async function timelockEncrypt(
