@@ -1,3 +1,5 @@
+import {Buffer} from "buffer"
+
 // as per the spec:
 // RFC 4648, Section 4
 // without = padding characters (sometimes referred to as "raw" or "unpadded" base64)

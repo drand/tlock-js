@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {chunked} from "./utils"
 
 const header = "-----BEGIN AGE ENCRYPTED FILE-----"

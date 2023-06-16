@@ -1,5 +1,6 @@
 import {Stanza} from "../age/age-encrypt-decrypt"
 import {PointG1, PointG2} from "@noble/bls12-381"
+import {Buffer} from "buffer"
 import {ChainClient, fetchBeacon, roundTime} from "drand-client"
 import * as ibe from "../crypto/ibe"
 import {Ciphertext, CiphertextOnG2} from "../crypto/ibe"
