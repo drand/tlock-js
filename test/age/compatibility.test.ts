@@ -1,7 +1,7 @@
 import {expect} from "chai"
 import {MockDrandClient} from "../drand/mock-drand-client"
 import {timelockDecrypt, timelockEncrypt} from "../../src"
-import {MAINNET_CHAIN_INFO, TESTNET_CHAIN_INFO} from "../../src/drand/defaults";
+import {MAINNET_CHAIN_INFO, MAINNET_CHAIN_INFO_NON_RFC, TESTNET_CHAIN_INFO} from "../../src/drand/defaults";
 import {assertError, assertErrorMessage} from "../utils";
 
 test("payloads encrypted with the old go impl should not decrypt anymore", async () => {
@@ -24,13 +24,13 @@ test("payloads encrypted with the old go impl should not decrypt anymore", async
     await assertErrorMessage(() => timelockDecrypt(payloadFromGoImpl, mockClient),"invalid proof: rP check failed")
 })
 
-test("payloads encrypted with the go impl should decrypt successfully with G1 beacon", async () => {
+test("payloads encrypted with the go impl should decrypt successfully with a non-rfc-compliant G1 beacon", async () => {
     const validBeaconOnG1 = {
         round: 2,
         randomness: "08eb40c1dff4076da53d222b2076f06c144391445cfac750815d5cacf51bf7c2",
         signature: "a050676d1a1b6ceedb5fb3281cdfe88695199971426ff003c0862460b3a72811328a07ecd53b7d57fc82bb67f35efaf1"
     }
-    const mockClient = new MockDrandClient(validBeaconOnG1, MAINNET_CHAIN_INFO)
+    const mockClient = new MockDrandClient(validBeaconOnG1, MAINNET_CHAIN_INFO_NON_RFC)
     const payloadFromGoImpl = `-----BEGIN AGE ENCRYPTED FILE-----
 YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHRsb2NrIDIgZGJkNTA2ZDZlZjc2ZTVm
 Mzg2ZjQxYzY1MWRjYjgwOGM1YmNiZDc1NDcxY2M0ZWFmYTNmNGRmN2FkNGU0YzQ5
