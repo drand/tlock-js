@@ -1,5 +1,5 @@
 import "isomorphic-fetch"
-import {mainnetClient, testnetClient, timelockDecrypt, timelockEncrypt} from "../../src"
+import {mainnetClient, nonRFCMainnetClient, testnetClient, timelockDecrypt, timelockEncrypt} from "../../src"
 import {HttpCachingChain, HttpChainClient} from "drand-client"
 
 describe("integration", () => {
@@ -22,7 +22,7 @@ describe("integration", () => {
         await expect(timelockEncrypt(1, Buffer.from("hello world"), chainedChainClient)).rejects.toThrow()
         await expect(timelockDecrypt("some-great-ciphertext", chainedChainClient)).rejects.toThrow()
     })
-    it("should be compatible with a ciphertext created using the go tlock lib", async () => {
+    it("should be compatible with a non-rfc-compliant ciphertext created using the go tlock lib", async () => {
         const ciphertext = "-----BEGIN AGE ENCRYPTED FILE-----\n" +
             "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IHRsb2NrIDYxNzEyNSBkYmQ1MDZkNmVm\n" +
             "NzZlNWYzODZmNDFjNjUxZGNiODA4YzViY2JkNzU0NzFjYzRlYWZhM2Y0ZGY3YWQ0\n" +
@@ -34,8 +34,7 @@ describe("integration", () => {
             "c2TwZmXAKEEDrcKgVp85arbO6P7vL2KWODg=\n" +
             "-----END AGE ENCRYPTED FILE-----\n"
 
-        const plaintext = await timelockDecrypt(ciphertext, mainnetClient())
-        console.log(plaintext)
+        const plaintext = await timelockDecrypt(ciphertext, nonRFCMainnetClient())
         expect(plaintext.toString("utf8")).toEqual("blah\n")
     })
 })

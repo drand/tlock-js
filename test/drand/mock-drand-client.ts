@@ -1,10 +1,10 @@
 import {
     Chain,
     ChainClient,
-    ChainInfo, ChainOptions,
+    ChainInfo,
+    ChainOptions,
     RandomnessBeacon
 } from "drand-client"
-import {defaultChainInfo, defaultChainUrl} from "../../src"
 import {TESTNET_CHAIN_INFO} from "../../src/drand/defaults";
 
 class MockDrandClient implements ChainClient {
