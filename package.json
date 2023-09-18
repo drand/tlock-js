@@ -1,6 +1,6 @@
 {
   "name": "tlock-js",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "A library to encrypt data that can only be decrypted in the future using drand",
   "source": "src/index.ts",
   "main": "index.js",
