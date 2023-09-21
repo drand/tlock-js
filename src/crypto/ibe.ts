@@ -58,21 +58,22 @@ async function encrypt<T, U>(
 
 export async function encryptOnG1(master: PointG1, ID: Uint8Array, msg: Uint8Array): Promise<Ciphertext<PointG1>> {
     return encrypt(master, ID, msg, PointG1.BASE,
-        (id: Uint8Array) => bls.PointG2.hashToCurve(id),
+        (id: Uint8Array) => bls.PointG2.hashToCurve(id, { DST: "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_" }),
         (m, Qid) => bls.pairing(m, Qid)
     )
 }
 
+// uses the DST for G2 erroneously
 export async function encryptOnG2(master: PointG2, ID: Uint8Array, msg: Uint8Array): Promise<Ciphertext<PointG2>> {
     return encrypt(master, ID, msg, PointG2.BASE,
-        (id: Uint8Array) => bls.PointG1.hashToCurve(id),
+        (id: Uint8Array) => bls.PointG1.hashToCurve(id, { DST: "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_" }),
         (m, Qid) => bls.pairing(Qid, m)
     )
 }
 
 export async function encryptOnG2RFC9380(master: PointG2, ID: Uint8Array, msg: Uint8Array): Promise<Ciphertext<PointG2>> {
     return encrypt(master, ID, msg, PointG2.BASE,
-        (id: Uint8Array) => bls.PointG1.hashToCurve(id, {DST: "BLS_SIG_BLS12381G1_XMD:SHA-256_SSWU_RO_NUL_"}),
+        (id: Uint8Array) => bls.PointG1.hashToCurve(id, { DST: "BLS_SIG_BLS12381G1_XMD:SHA-256_SSWU_RO_NUL_" }),
         (m, Qid) => bls.pairing(Qid, m)
     )
 }
