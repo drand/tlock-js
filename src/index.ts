@@ -17,7 +17,8 @@ import {
     defaultChainUrl,
     MAINNET_CHAIN_URL,
     MAINNET_CHAIN_URL_NON_RFC,
-    TESTNET_CHAIN_URL
+    TESTNET_CHAIN_URL,
+    TESTNET_CHAIN_INFO
 } from "./drand/defaults"
 import {LIB_VERSION} from "./version"
 
@@ -46,8 +47,15 @@ export async function timelockDecrypt(
 }
 
 export function testnetClient(): HttpChainClient {
-    const chain = new HttpCachingChain(TESTNET_CHAIN_URL, defaultChainOptions)
-    return new HttpChainClient(chain, defaultChainOptions, {
+    const opts = {
+        ...defaultChainOptions,
+        chainVerificationParams: {
+            chainHash: TESTNET_CHAIN_INFO.hash,
+            publicKey: TESTNET_CHAIN_INFO.public_key,
+        }
+    }
+    const chain = new HttpCachingChain(TESTNET_CHAIN_URL, opts)
+    return new HttpChainClient(chain, opts, {
         userAgent: `tlock-js-${LIB_VERSION}`
     })
 }
