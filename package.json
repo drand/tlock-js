@@ -42,6 +42,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@noble/curves": "^1.4.0",
     "@noble/hashes": "^1.4.0",
     "@stablelib/chacha20poly1305": "^1.0.1",
     "buffer": "^6.0.3",

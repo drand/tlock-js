@@ -40,11 +40,11 @@ export function createTimelockDecrypter(network: ChainClient) {
             }
             case "bls-unchained-on-g1": {
                 const ciphertext = parseCiphertext(body, bls12_381.G2.ProjectivePoint.BASE)
-                return ibe.decryptOnG2(Buffer.from(beacon.signature, "hex"), ciphertext)
+                return await ibe.decryptOnG2(Buffer.from(beacon.signature, "hex"), ciphertext)
             }
             case "bls-unchained-g1-rfc9380": {
                 const ciphertext = parseCiphertext(body, bls12_381.G2.ProjectivePoint.BASE)
-                return ibe.decryptOnG2(Buffer.from(beacon.signature, "hex"), ciphertext)
+                return await ibe.decryptOnG2(Buffer.from(beacon.signature, "hex"), ciphertext)
             }
             default:
                 throw Error(`Unsupported scheme: ${chainInfo.schemeID} - you must use a drand network with an unchained scheme for timelock decryption!`)
