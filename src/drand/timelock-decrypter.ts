@@ -1,10 +1,10 @@
-import {PointG1, PointG2} from "@noble/bls12-381"
 import {Buffer} from "buffer"
 import {ChainClient, fetchBeacon, roundTime} from "drand-client"
 import {Stanza} from "../age/age-encrypt-decrypt"
 import * as ibe from "../crypto/ibe"
 import {Ciphertext} from "../crypto/ibe"
 import {Point} from "./index"
+import {bls12_381} from "@noble/curves/bls12-381"
 
 export function createTimelockDecrypter(network: ChainClient) {
     return async (recipients: Array<Stanza>): Promise<Uint8Array> => {
@@ -35,19 +35,16 @@ export function createTimelockDecrypter(network: ChainClient) {
 
         switch (chainInfo.schemeID) {
             case "pedersen-bls-unchained": {
-                const g2 = PointG2.fromHex(beacon.signature)
-                const ciphertext = parseCiphertext(body, PointG1.BASE, PointG1.fromHex)
-                return await ibe.decryptOnG1(g2, ciphertext)
+                const ciphertext = parseCiphertext(body, bls12_381.G1.ProjectivePoint.BASE)
+                return await ibe.decryptOnG1(Buffer.from(beacon.signature, "hex"), ciphertext)
             }
             case "bls-unchained-on-g1": {
-                const g1 = PointG1.fromHex(beacon.signature)
-                const cipherText = parseCiphertext(body, PointG2.BASE, PointG2.fromHex)
-                return ibe.decryptOnG2(g1, cipherText)
+                const ciphertext = parseCiphertext(body, bls12_381.G2.ProjectivePoint.BASE)
+                return ibe.decryptOnG2(Buffer.from(beacon.signature, "hex"), ciphertext)
             }
             case "bls-unchained-g1-rfc9380": {
-                const g1 = PointG1.fromHex(beacon.signature)
-                const cipherText = parseCiphertext(body, PointG2.BASE, PointG2.fromHex)
-                return ibe.decryptOnG2RFC9380(g1, cipherText)
+                const ciphertext = parseCiphertext(body, bls12_381.G2.ProjectivePoint.BASE)
+                return ibe.decryptOnG2(Buffer.from(beacon.signature, "hex"), ciphertext)
             }
             default:
                 throw Error(`Unsupported scheme: ${chainInfo.schemeID} - you must use a drand network with an unchained scheme for timelock decryption!`)
@@ -66,13 +63,13 @@ export function createTimelockDecrypter(network: ChainClient) {
         return roundNumberParsed
     }
 
-    function parseCiphertext<T>(body: Uint8Array, base: Point, fromHex: (buf: Buffer) => T): Ciphertext<T> {
+    function parseCiphertext(body: Uint8Array, base: Point): Ciphertext {
         const pointLength = base.toRawBytes(true).byteLength
         const pointBytes = body.subarray(0, pointLength)
         const theRest = body.subarray(pointLength)
         const eachHalf = theRest.length / 2
 
-        const U = fromHex(Buffer.from(pointBytes))
+        const U = pointBytes
         const V = theRest.subarray(0, eachHalf)
         const W = theRest.subarray(eachHalf)
 

@@ -1,5 +1,5 @@
 import {Buffer} from "buffer"
-import {Fp, Fp12, Fp2} from "@noble/bls12-381"
+import {Fp, Fp12, Fp2, Fp6} from "./fp"
 
 // returns a new array with the xor of a ^ b
 export function xor(a: Uint8Array, b: Uint8Array): Uint8Array {
@@ -39,7 +39,7 @@ export function bytesToHex(uint8a: Uint8Array): string {
 // weirdly all the child FPs have to be reversed when serialising to bytes
 export function fpToBytes(fp: Fp): Uint8Array {
     // 48 bytes = 96 hex bytes
-    const hex = BigInt(fp.value).toString(16).padStart(96, "0")
+    const hex = fp.toString(16).padStart(96, "0")
     const buf = Buffer.alloc(hex.length / 2)
     buf.write(hex, "hex")
     return buf
@@ -51,7 +51,7 @@ export function fp2ToBytes(fp2: Fp2): Uint8Array {
 
 // fp6 isn't exported by noble... let's take off the guard rails
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export function fp6ToBytes(fp6: any): Uint8Array {
+export function fp6ToBytes(fp6: Fp6): Uint8Array {
     return Buffer.concat([fp6.c2, fp6.c1, fp6.c0].map(fp2ToBytes))
 }
 

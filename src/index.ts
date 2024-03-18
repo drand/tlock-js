@@ -46,6 +46,10 @@ export async function timelockDecrypt(
     return await decryptAge(cipher, timelockDecrypter)
 }
 
+const userAgentOpts = {
+    userAgent: `tlock-js-${LIB_VERSION}`
+}
+
 export function testnetClient(): HttpChainClient {
     const opts = {
         ...defaultChainOptions,
@@ -55,9 +59,7 @@ export function testnetClient(): HttpChainClient {
         }
     }
     const chain = new HttpCachingChain(TESTNET_CHAIN_URL, opts)
-    return new HttpChainClient(chain, opts, {
-        userAgent: `tlock-js-${LIB_VERSION}`
-    })
+    return new HttpChainClient(chain, opts, userAgentOpts)
 }
 
 export function mainnetClient(): HttpChainClient {
@@ -69,7 +71,7 @@ export function mainnetClient(): HttpChainClient {
         }
     }
     const chain = new HttpCachingChain(MAINNET_CHAIN_URL, opts)
-    return new HttpChainClient(chain, opts)
+    return new HttpChainClient(chain, opts, userAgentOpts)
 }
 
 export function nonRFCMainnetClient(): HttpChainClient {
@@ -81,7 +83,7 @@ export function nonRFCMainnetClient(): HttpChainClient {
         }
     }
     const chain = new HttpCachingChain(MAINNET_CHAIN_URL_NON_RFC, opts)
-    return new HttpChainClient(chain, opts)
+    return new HttpChainClient(chain, opts, userAgentOpts)
 }
 
 export {
