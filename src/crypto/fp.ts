@@ -1,5 +1,7 @@
 import * as mod from "@noble/curves/abstract/modular"
 
+// these are all some helpers around the field elements used in the BLS lib that got abstracted away
+// when migrating from @noble/bls12-381 -> @noble/curves
 declare const Fp: Readonly<mod.IField<bigint> & Required<Pick<mod.IField<bigint>, "isOdd">>>;
 type Fp = bigint;
 type BigintTuple = [bigint, bigint];
