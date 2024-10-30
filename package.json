@@ -3,8 +3,25 @@
   "version": "0.9.0",
   "description": "A library to encrypt data that can only be decrypted in the future using drand",
   "source": "src/index.ts",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "targets": {
     "default": {
       "engines": {
@@ -14,7 +31,7 @@
   },
   "scripts": {
     "precompile": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
-    "compile": "npm run precompile && tsc --project tsconfig.json",
+    "compile": "npm run precompile && tsc --project tsconfig.json && tsc --project tsconfig-cjs.json",
     "build:ci": "npm run compile && npm run lint && npm run test",
     "clean": "rm -rf ./dist/*",
     "lint": "eslint",

@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es2020",
     "target": "es2020",
     "sourceMap": true,
-    "outDir": "./dist/",
+    "outDir": "./dist/esm",
     "moduleResolution": "node",
     "declaration": true,
     "allowJs": true,
