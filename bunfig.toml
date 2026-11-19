@@ -1,0 +1,4 @@
+[test]
+root = "test"
+coverageSkipTestFiles = true
+coveragePathIgnorePatterns = ["test/**"]
