@@ -1,32 +1,16 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2020",
-    "sourceMap": true,
-    "outDir": "./dist/",
-    "moduleResolution": "node",
-    "declaration": true,
-    "allowJs": true,
-    "esModuleInterop": true,
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
     "strict": true,
-    "allowSyntheticDefaultImports": true,
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": false,
-    "types": [
-      "node",
-      "jest",
-      "./src/types/js-chacha20"
-    ]
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "types": ["bun"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "compileOnSave": true
+  "include": ["src/**/*.ts", "test/**/*.ts"]
 }
-

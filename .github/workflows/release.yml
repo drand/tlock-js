@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: "Type publish tlock-js@VERSION using the protected vVERSION tag"
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.repository == 'drand/tlock-js' && github.ref_type == 'tag' && github.ref_protected
+    permissions:
+      contents: read
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: npm
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24.22.3"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: npm-package
+      - env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+          ENABLE_NPM_PUBLISH: ${{ vars.ENABLE_NPM_PUBLISH }}
+        run: |
+          set -euo pipefail
+          test "$ENABLE_NPM_PUBLISH" = true
+          version=$(tar -xOf tlock-js.tgz package/package.json | node -e '
+            const { name, version } = JSON.parse(require("node:fs").readFileSync(0, "utf8"));
+            if (name !== "tlock-js" || !/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(version)) process.exit(1);
+            console.log(version);
+          ')
+          test "$GITHUB_REF_NAME" = "v$version"
+          test "$CONFIRMATION" = "publish tlock-js@$version"
+          npm publish ./tlock-js.tgz --access public --provenance --ignore-scripts
